@@ -13,3 +13,9 @@ export type PostCreateRequest = {
   is_draft: boolean;
   is_private: boolean;
 };
+
+export type PostGetResponse = {
+  data: Post[];
+  has_more: boolean;
+  cursor: string | null;
+};

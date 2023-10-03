@@ -33,6 +33,8 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   let query = db
     .collection("posts")
     .where("deleted_at", "==", null)
+    .where("is_draft", "==", false)
+    .where("is_private", "==", false)
     .orderBy("created_at", "desc")
     .limit(limit);
 
@@ -57,7 +59,11 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     } as Post);
   });
 
-  res.status(200).json(posts);
+  res.status(200).json({
+    data: posts,
+    has_more: posts.length === limit,
+    cursor: posts.length > 0 ? posts[posts.length - 1].post_id : null,
+  });
 };
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -82,5 +88,5 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const doc = await docRef.get();
   const data = doc.data();
 
-  res.status(201).json(data);
+  res.status(201).json({ data });
 };
