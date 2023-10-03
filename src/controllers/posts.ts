@@ -24,6 +24,40 @@ export const postsHandler = {
 // TODO implement + infinite scroll
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   // TODO authorization check
+  // TODO Add anon cookie if not present
+
+  const cursor: string | null = req.query.cursor?.toString() || null;
+  const limit = 10;
+
+  const db = admin.firestore();
+  let query = db
+    .collection("posts")
+    .where("deleted_at", "==", null)
+    .orderBy("created_at", "desc")
+    .limit(limit);
+
+  if (cursor) {
+    const cursorDoc = await db.collection("posts").doc(cursor).get();
+
+    if (!cursorDoc.exists) {
+      res.status(404).end(); // Not Found
+      return;
+    }
+
+    query = query.startAfter(cursorDoc);
+  }
+
+  const querySnapshot = await query.get();
+
+  const posts: Post[] = [];
+  querySnapshot.forEach((doc) => {
+    posts.push({
+      post_id: doc.id,
+      ...doc.data(),
+    } as Post);
+  });
+
+  res.status(200).json(posts);
 };
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -39,7 +73,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
     created_at: admin.firestore.FieldValue.serverTimestamp(),
     updated_at: admin.firestore.FieldValue.serverTimestamp(),
-    deleted_at: undefined,
+    deleted_at: null,
   };
 
   const db = admin.firestore();

@@ -4,5 +4,5 @@ import { FieldValue } from "@google-cloud/firestore";
 export type Resource = {
   created_at: FieldValue;
   updated_at: FieldValue;
-  deleted_at: FieldValue | undefined;
+  deleted_at: FieldValue | null;
 };
