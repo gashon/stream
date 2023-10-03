@@ -59,6 +59,8 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     } as Post);
   });
 
+  console.log("posts", posts);
+
   res.status(200).json({
     data: posts,
     has_more: posts.length === limit,
