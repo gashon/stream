@@ -76,7 +76,7 @@ const ControlPanel: FC = () => (
       <CheckboxInput id="is_draft" label="Draft" />
     </div>
     <button type="submit" className="p-2 underline rounded-md">
-      Submit
+      Create
     </button>
   </div>
 );
