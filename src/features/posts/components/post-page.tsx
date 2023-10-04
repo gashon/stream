@@ -9,7 +9,7 @@ type Props = {
   posts: (Post | { is_favorite: boolean })[];
 };
 
-const Post: FC<
+const PostComponent: FC<
   Post & {
     isStarred: boolean;
   }
@@ -47,7 +47,11 @@ export const PostPage: FC<Props> = ({ posts }) => {
     <div className="w-full p-0">
       {posts.map((post) => {
         return (
-          <Post key={`post:${post.post_id}`} isStarred={post.is_favorite} {...post} />
+          <PostComponent
+            key={`post:${post.post_id}`}
+            isStarred={post.is_favorite}
+            {...post}
+          />
         );
       })}
     </div>

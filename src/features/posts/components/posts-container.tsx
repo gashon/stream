@@ -5,9 +5,10 @@ import { LoadingSkeleton } from "@/components";
 import { useInfinitePostsQuery, PostPage } from "@/features";
 
 export const PostsContainer: FC = () => {
-  const { data, error, isFetching, fetchNextPage } = useInfinitePostsQuery();
+  const { data, error, isFetching, fetchNextPage, isFetchingNextPage } =
+    useInfinitePostsQuery();
 
-  if (isFetching) {
+  if (isFetching && !isFetchingNextPage) {
     return <LoadingSkeleton num={10} />;
   }
 
