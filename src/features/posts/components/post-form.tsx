@@ -7,6 +7,7 @@ import { useCreatePostMutation } from "@/features";
 type FormValues = PostCreateRequest;
 
 const initialValues: FormValues = {
+  password: "",
   content: "",
   is_private: false,
   is_draft: false,
@@ -25,18 +26,30 @@ export const PostForm: FC = () => {
           if (createPostMutation.isError) {
             throw new Error("Failed to create post");
           }
-
           actions.resetForm();
         } catch (err) {}
       }}
     >
       <Form className="flex flex-col justify-center space-y-4">
+        <PasswordInput />
         <ContentInput />
         <ControlPanel />
       </Form>
     </Formik>
   );
 };
+
+const PasswordInput: FC = () => (
+  <div className="flex flex-col">
+    <Field
+      id="password"
+      name="password"
+      placeholder="password"
+      className="p-2 border-b bg-transparent"
+      autoComplete="off"
+    />
+  </div>
+);
 
 const ContentInput: FC = () => (
   <div className="flex flex-col">
