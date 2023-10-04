@@ -1,6 +1,8 @@
 import { FC } from "react";
 import { Formik, Form, Field, FormikHelpers } from "formik";
+
 import type { PostCreateRequest } from "@/types";
+import { useCreatePostMutation } from "@/features";
 
 type FormValues = PostCreateRequest;
 
@@ -10,15 +12,24 @@ const initialValues: FormValues = {
   is_draft: false,
 };
 
-const handleSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
-  console.log({ values, actions });
-  alert(JSON.stringify(values, null, 2));
-  actions.setSubmitting(false);
-};
-
 export const PostForm: FC = () => {
+  const createPostMutation = useCreatePostMutation();
+
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={(values: FormValues, actions: FormikHelpers<FormValues>) => {
+        try {
+          createPostMutation.mutate(values);
+
+          if (createPostMutation.isError) {
+            throw new Error("Failed to create post");
+          }
+
+          actions.resetForm();
+        } catch (err) {}
+      }}
+    >
       <Form className="flex flex-col justify-center space-y-4">
         <ContentInput />
         <ControlPanel />
