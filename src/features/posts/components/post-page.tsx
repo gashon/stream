@@ -3,6 +3,7 @@ import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 
 import storage from "@/lib/storage";
 import type { Post, Favorites } from "@/types";
+import { useFavoritePostMutation } from "@/features";
 
 type Props = {
   posts: Post[];
@@ -13,20 +14,14 @@ const Post: FC<
     isStarred: boolean;
   }
 > = ({ isStarred: initStarredState, ...post }) => {
-  const [isStarred, setIsStarred] = useState<boolean>(initStarredState);
+  const { isStarred, favoritePostMutation } = useFavoritePostMutation({
+    isStarred: initStarredState,
+    postId: post.post_id,
+  });
 
   const onStarClick = () => {
     // TODO add append method to storage lib
-    storage.set<Favorites>(
-      "favorites",
-      isStarred
-        ? storage
-            .get<Favorites>("favorites")
-            ?.filter(({ post_id: id }) => id !== post.post_id) ?? []
-        : [...(storage.get<Favorites>("favorites") ?? []), post]
-    );
-
-    setIsStarred((prev) => !prev);
+    favoritePostMutation.mutate();
   };
 
   return (
