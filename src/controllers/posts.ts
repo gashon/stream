@@ -130,8 +130,8 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     is_draft,
     is_private,
 
-    created_at: admin.firestore.FieldValue.serverTimestamp(),
-    updated_at: admin.firestore.FieldValue.serverTimestamp(),
+    created_at: new Date().getTime(),
+    updated_at: new Date().getTime(),
     deleted_at: null,
   };
 

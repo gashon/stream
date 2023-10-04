@@ -1,8 +1,7 @@
 // shared fields across all resources
-import { FieldValue } from "@google-cloud/firestore";
 
 export type Resource = {
-  created_at: FieldValue;
-  updated_at: FieldValue;
-  deleted_at: FieldValue | null;
+  created_at: number;
+  updated_at: number;
+  deleted_at: number | null;
 };
