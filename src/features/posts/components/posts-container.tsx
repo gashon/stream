@@ -19,10 +19,10 @@ export const PostsContainer: FC = () => {
   }
 
   return (
-    <div>
+    <>
       {data.pages.map(({ data: posts }, i) => (
         <PostPage key={`posts:page:${i}`} posts={posts} />
       ))}
-    </div>
+    </>
   );
 };

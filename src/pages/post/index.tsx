@@ -1,13 +1,15 @@
 import { FC } from "react";
 
 import { PostForm } from "@/features";
+import { PageLayout } from "@/layouts";
 
 const PostPage: FC = () => {
   return (
-    <div className="w-full">
-      <h1 className="text-2xl mb-10">Create a Stream</h1>
-      <PostForm />
-    </div>
+    <PageLayout title="Create a Stream.">
+      <div className="w-full">
+        <PostForm />
+      </div>
+    </PageLayout>
   );
 };
 
