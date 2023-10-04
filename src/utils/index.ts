@@ -1,1 +1,1 @@
-export * from "./create-auth-token";
+export * from "./auth-token";

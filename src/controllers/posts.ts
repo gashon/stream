@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { ANON_AUTH_TOKEN } from "@/const";
-import { createAnonToken } from "@/utils";
+import { createAnonToken, setAuthToken, getAuthToken } from "@/utils";
 import { verifyToken } from "@/lib/jwt";
 import { admin } from "@/lib/firebase-admin";
 import type { Post, PostCreateRequest, AuthToken } from "@/types";
@@ -26,11 +26,11 @@ export const postsHandler = {
 
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   // add anon cookie
-  if (!req.headers.cookie) {
+  if (!getAuthToken(req)) {
     const token = createAnonToken({ is_editor: false });
 
     // set cookie
-    res.setHeader("Set-Cookie", `${ANON_AUTH_TOKEN}=${token}; Path=/`);
+    setAuthToken(res, token);
   }
 
   const cursor: string | null = req.query.cursor?.toString() || null;
@@ -75,7 +75,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   // if no auth, check password in body
-  if (!req.headers.cookie) {
+  if (!getAuthToken(req)) {
     const { password } = req.body as PostCreateRequest;
 
     if (password !== process.env.POST_PASSWORD) {
@@ -87,7 +87,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = createAnonToken({ is_editor: true });
 
     // set cookie
-    res.setHeader("Set-Cookie", `${ANON_AUTH_TOKEN}=${token}; Path=/`);
+    setAuthToken(res, token);
   }
 
   // get authToken from cookie
