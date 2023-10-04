@@ -25,7 +25,12 @@ export const PostsContainer: FC = () => {
   const hasMore = data.pages[data.pages.length - 1]?.has_more;
 
   return (
-    <div className="w-full border-r pr-6">
+    <div
+      className="w-full"
+      style={{
+        height: "calc(100vh - 10rem)",
+      }}
+    >
       <InfiniteScroll
         dataLength={dataLength}
         next={fetchNextPage}

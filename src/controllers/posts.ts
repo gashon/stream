@@ -34,7 +34,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const cursor: string | null = req.query.cursor?.toString() || null;
-  const limit = 10;
+  const limit = 20;
 
   const db = admin.firestore();
   let query = db

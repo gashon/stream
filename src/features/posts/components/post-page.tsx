@@ -36,8 +36,8 @@ const Post: FC<
       <div className="flex flex-row items-center justify-between">
         <p>{post.content}</p>
 
-        <div className="cursor-pointer" onClick={onStarClick}>
-          {isStarred ? <AiFillStar /> : <AiOutlineStar />}
+        <div className="cursor-pointer p-2 opacity-75" onClick={onStarClick}>
+          {isStarred ? <AiFillStar className="text-yellow-300" /> : <AiOutlineStar />}
         </div>
       </div>
     </div>
