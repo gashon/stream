@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 
 import type { PostCreateRequest } from "@/types";
@@ -13,25 +13,32 @@ const initialValues: FormValues = {
   is_draft: false,
 };
 
+enum ErrorStatus {
+  NoError,
+  AuthError,
+  ServerError,
+}
+
 export const PostForm: FC = () => {
+  const [errorStatus, setErrorStatus] = useState<ErrorStatus>(ErrorStatus.NoError);
   const createPostMutation = useCreatePostMutation();
 
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={(values: FormValues, actions: FormikHelpers<FormValues>) => {
-        try {
-          createPostMutation.mutate(values);
+        createPostMutation.mutate(values);
 
-          if (createPostMutation.isError) {
-            throw new Error("Failed to create post");
-          }
+        console.log("ERROR", createPostMutation.error);
+        if (createPostMutation.isError) {
+          setErrorStatus(ErrorStatus.AuthError);
+        } else {
           actions.resetForm();
-        } catch (err) {}
+        }
       }}
     >
       <Form className="flex flex-col justify-center space-y-4">
-        <PasswordInput />
+        {errorStatus === ErrorStatus.AuthError && <PasswordInput />}
         <ContentInput />
         <ControlPanel />
       </Form>
