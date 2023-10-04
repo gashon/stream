@@ -8,7 +8,7 @@ import type { Post, PostCreateRequest, AuthToken } from "@/types";
 
 type PostWithoutId = Omit<Post, "post_id">;
 
-export const postsHandler = {
+export const favoritesHandler = {
   handle: (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
       case "GET":
@@ -61,6 +61,8 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     postIds.push(doc.id);
   });
 
+  console.log("IDS", postIds);
+
   const posts: Post[] = [];
   for (const postId of postIds) {
     const postDoc = await db.collection("posts").doc(postId).get();
@@ -77,26 +79,24 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   // add anon cookie
-  if (!getAuthToken(req)) {
-    const token = createAnonToken({ is_editor: false });
+  let token = getAuthToken(req);
+  if (!token) {
+    token = createAnonToken({ is_editor: false });
 
     // set cookie
     setAuthToken(res, token);
   }
 
-  const userId = verifyToken<AuthToken>(getAuthToken(req)!).user_id;
+  const userId = verifyToken<AuthToken>(token!).user_id;
 
   const { is_starred, post_id } = req.body;
 
   const db = admin.firestore();
-  const docRef = await db
-    .collection("users")
-    .doc(userId)
-    .collection("favorites")
-    .doc(post_id);
+  const favoritesRef = db.collection("users").doc(userId).collection("favorites");
 
-  const doc = await docRef.get();
-  const data = doc.data();
+  favoritesRef.doc(post_id).set({ is_starred });
+
+  const data = { post_id, is_starred };
 
   res.status(201).json({ data });
 };

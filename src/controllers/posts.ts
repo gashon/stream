@@ -26,8 +26,9 @@ export const postsHandler = {
 
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   // add anon cookie
+  let token = getAuthToken(req);
   if (!getAuthToken(req)) {
-    const token = createAnonToken({ is_editor: false });
+    token = createAnonToken({ is_editor: false });
 
     // set cookie
     setAuthToken(res, token);
@@ -66,8 +67,28 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     } as Post);
   });
 
+  const userId = verifyToken<AuthToken>(token!).user_id;
+  const favorites: string[] = [];
+  if (userId) {
+    const favoritesSnapshot = await db
+      .collection("users")
+      .doc(userId)
+      .collection("favorites")
+      .where("is_starred", "==", true)
+      .get();
+
+    favoritesSnapshot.forEach((doc) => {
+      favorites.push(doc.id);
+    });
+  }
+
   res.status(200).json({
-    data: posts,
+    data: posts.map((post) => {
+      return {
+        ...post,
+        is_favorite: favorites.includes(post.post_id),
+      };
+    }),
     has_more: posts.length === limit,
     cursor: posts.length > 0 ? posts[posts.length - 1].post_id : null,
   });
@@ -117,7 +138,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { content, is_draft, is_private } = req.body as PostCreateRequest;
-  if (content.length == 0) {
+  if ((content ?? "").length == 0) {
     res.status(400).send({
       error: "content is required",
     });

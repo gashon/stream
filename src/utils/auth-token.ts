@@ -19,5 +19,9 @@ export const getAuthToken = (req: NextApiRequest): string | undefined =>
   req.cookies[ANON_AUTH_TOKEN];
 
 export const setAuthToken = (res: NextApiResponse, token: string): void => {
-  res.setHeader("Set-Cookie", `${ANON_AUTH_TOKEN}=${token}; Path=/`);
+  // overwrite
+  res.setHeader(
+    "Set-Cookie",
+    `${ANON_AUTH_TOKEN}=${token}; Path=/; SameSite=Lax; Max-Age=31536000;`
+  );
 };

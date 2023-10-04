@@ -6,7 +6,7 @@ import type { Post, Favorites } from "@/types";
 import { useFavoritePostMutation } from "@/features";
 
 type Props = {
-  posts: Post[];
+  posts: (Post | { is_favorite: boolean })[];
 };
 
 const Post: FC<
@@ -46,9 +46,9 @@ export const PostPage: FC<Props> = ({ posts }) => {
   return (
     <div className="w-full p-0">
       {posts.map((post) => {
-        const isStarred = starredPostIds.includes(post.post_id);
-
-        return <Post key={`post:${post.post_id}`} isStarred={isStarred} {...post} />;
+        return (
+          <Post key={`post:${post.post_id}`} isStarred={post.is_favorite} {...post} />
+        );
       })}
     </div>
   );

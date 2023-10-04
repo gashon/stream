@@ -16,7 +16,7 @@ export const useFavoritePostMutation = ({
 
   const favoritePostMutation = useMutation(
     () => {
-      return fetch("/api/post/favorite", {
+      return fetch("/api/posts/favorites", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
