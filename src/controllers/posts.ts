@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import { ANON_AUTH_TOKEN } from "@/const";
+import { createAnonToken } from "@/utils";
 import { createToken, verifyToken } from "@/lib/jwt";
 import { admin } from "@/lib/firebase-admin";
 import type { Post, PostCreateRequest, AuthToken } from "@/types";
@@ -24,8 +26,13 @@ export const postsHandler = {
 
 // TODO implement + infinite scroll
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-  // TODO authorization check
-  // TODO Add anon cookie if not present
+  // add anon cookie
+  if (!req.headers.cookie) {
+    const token = createAnonToken({ is_editor: false });
+
+    // set cookie
+    res.setHeader("Set-Cookie", `${ANON_AUTH_TOKEN}=${token}; Path=/`);
+  }
 
   const cursor: string | null = req.query.cursor?.toString() || null;
   const limit = 10;
@@ -78,13 +85,10 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // create auth token
-    const authToken = createToken({
-      is_editor: true,
-      created_at: new Date().toISOString(),
-    } as AuthToken);
+    const token = createAnonToken({ is_editor: true });
 
     // set cookie
-    res.setHeader("Set-Cookie", `authToken=${authToken}; Path=/`);
+    res.setHeader("Set-Cookie", `${ANON_AUTH_TOKEN}=${token}; Path=/`);
   }
 
   // get authToken from cookie
