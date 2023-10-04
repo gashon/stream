@@ -7,6 +7,9 @@ export const useCreatePostMutation = () => {
     async (body) => {
       const res = await fetch("/api/posts", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(body),
       });
       const data: PostGetResponse = await res.json();
