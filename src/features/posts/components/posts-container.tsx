@@ -1,22 +1,15 @@
 import { FC } from "react";
 
+import { LoadingSkeleton } from "@/components";
 import { useInfinitePostsQuery, PostPage } from "@/features";
 
 export const PostsContainer: FC = () => {
   // TODO isFetchingNextPage loading icon
-  const { data, error, isFetching, isFetchingNextPage } = useInfinitePostsQuery();
+  const { data, error, isFetching, isFetchingNextPage, fetchNextPage } =
+    useInfinitePostsQuery();
 
   if (isFetching) {
-    return (
-      <ul className="mt-5 space-y-8">
-        {new Array(10).fill(0).map((_, i) => (
-          <li
-            key={`post:loading:${i}`}
-            className="w-full h-10 bg-gray-200 rounded-md dark:bg-zinc-700"
-          ></li>
-        ))}
-      </ul>
-    );
+    return <LoadingSkeleton num={10} />;
   }
 
   if (!data) {
@@ -28,10 +21,10 @@ export const PostsContainer: FC = () => {
   }
 
   return (
-    <>
+    <div className="w-full border-r pr-6 ">
       {data.pages.map(({ data: posts }, i) => (
         <PostPage key={`posts:page:${i}`} posts={posts} />
       ))}
-    </>
+    </div>
   );
 };

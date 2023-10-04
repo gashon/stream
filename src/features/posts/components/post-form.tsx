@@ -29,7 +29,6 @@ export const PostForm: FC = () => {
       onSubmit={(values: FormValues, actions: FormikHelpers<FormValues>) => {
         createPostMutation.mutate(values);
 
-        console.log("ERROR", createPostMutation.error);
         if (createPostMutation.isError) {
           setErrorStatus(ErrorStatus.AuthError);
         } else {

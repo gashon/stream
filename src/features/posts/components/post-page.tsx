@@ -49,7 +49,7 @@ export const PostPage: FC<Props> = ({ posts }) => {
     storage.get<Favorites>("favorites")?.map(({ post_id }) => post_id) || [];
 
   return (
-    <div className="w-full border-r pr-2">
+    <div className="w-full p-0">
       {posts.map((post) => {
         const isStarred = starredPostIds.includes(post.post_id);
 
