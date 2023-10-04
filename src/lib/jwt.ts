@@ -6,6 +6,6 @@ export const createToken = (payload: object, expiresIn = undefined) => {
   return sign(payload, secret, expiresIn ? { expiresIn } : {});
 };
 
-export const verifyToken = (token: string) => {
-  return verify(token, secret);
+export const verifyToken = <T>(token: string) => {
+  return verify(token, secret) as T;
 };

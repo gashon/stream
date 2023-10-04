@@ -21,3 +21,7 @@ export type PostGetResponse = {
   has_more: boolean;
   cursor: string | null;
 };
+
+export type PostCreateResponse = {
+  data: Post;
+};

@@ -1,0 +1,102 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+
+import { ANON_AUTH_TOKEN } from "@/const";
+import { createAnonToken, setAuthToken, getAuthToken } from "@/utils";
+import { verifyToken } from "@/lib/jwt";
+import { admin } from "@/lib/firebase-admin";
+import type { Post, PostCreateRequest, AuthToken } from "@/types";
+
+type PostWithoutId = Omit<Post, "post_id">;
+
+export const postsHandler = {
+  handle: (req: NextApiRequest, res: NextApiResponse) => {
+    switch (req.method) {
+      case "GET":
+        handleGetRequest(req, res);
+        break;
+      case "POST":
+        handlePostRequest(req, res);
+        break;
+      default:
+        res.status(405).end(); // Method Not Allowed
+        break;
+    }
+  },
+};
+
+const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+  // add anon cookie
+  if (!getAuthToken(req)) {
+    const token = createAnonToken({ is_editor: false });
+
+    // set cookie
+    setAuthToken(res, token);
+  }
+
+  // in token, get user id
+  const userId = verifyToken<AuthToken>(getAuthToken(req)!).user_id;
+
+  const cursor: string | null = req.query.cursor?.toString() || null;
+  const limit = 20;
+
+  const db = admin.firestore();
+  let query = db.collection("users").doc(userId).collection("favorites").limit(limit);
+
+  if (cursor) {
+    const cursorDoc = await db.collection("posts").doc(cursor).get();
+
+    if (!cursorDoc.exists) {
+      res.status(404).end(); // Not Found
+      return;
+    }
+
+    query = query.startAfter(cursorDoc);
+  }
+
+  const querySnapshot = await query.get();
+
+  // TODO fix n+1 problem here
+  const postIds: string[] = [];
+  querySnapshot.forEach((doc) => {
+    postIds.push(doc.id);
+  });
+
+  const posts: Post[] = [];
+  for (const postId of postIds) {
+    const postDoc = await db.collection("posts").doc(postId).get();
+    const post = postDoc.data() as PostWithoutId;
+    posts.push({ ...post, post_id: postId });
+  }
+
+  res.status(200).json({
+    data: posts,
+    has_more: posts.length === limit,
+    cursor: posts.length > 0 ? posts[posts.length - 1].post_id : null,
+  });
+};
+
+const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+  // add anon cookie
+  if (!getAuthToken(req)) {
+    const token = createAnonToken({ is_editor: false });
+
+    // set cookie
+    setAuthToken(res, token);
+  }
+
+  const userId = verifyToken<AuthToken>(getAuthToken(req)!).user_id;
+
+  const { is_starred, post_id } = req.body;
+
+  const db = admin.firestore();
+  const docRef = await db
+    .collection("users")
+    .doc(userId)
+    .collection("favorites")
+    .doc(post_id);
+
+  const doc = await docRef.get();
+  const data = doc.data();
+
+  res.status(201).json({ data });
+};
