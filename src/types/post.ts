@@ -12,6 +12,8 @@ export type PostCreateRequest = {
   content: string;
   is_draft: boolean;
   is_private: boolean;
+
+  password?: string;
 };
 
 export type PostGetResponse = {

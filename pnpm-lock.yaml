@@ -4,12 +4,18 @@ dependencies:
   '@tanstack/react-query':
     specifier: ^4.35.7
     version: 4.35.7(react-dom@18.2.0)(react@18.2.0)
+  '@types/jsonwebtoken':
+    specifier: ^9.0.3
+    version: 9.0.3
   firebase-admin:
     specifier: ^11.11.0
     version: 11.11.0
   formik:
     specifier: ^2.4.5
     version: 2.4.5(react@18.2.0)
+  jsonwebtoken:
+    specifier: ^9.0.2
+    version: 9.0.2
   next:
     specifier: 13.5.4
     version: 13.5.4(react-dom@18.2.0)(react@18.2.0)
