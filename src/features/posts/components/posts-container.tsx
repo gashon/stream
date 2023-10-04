@@ -7,7 +7,16 @@ export const PostsContainer: FC = () => {
   const { data, error, isFetching, isFetchingNextPage } = useInfinitePostsQuery();
 
   if (isFetching) {
-    return <div>Loading...</div>;
+    return (
+      <ul className="mt-5 space-y-8">
+        {new Array(10).fill(0).map((_, i) => (
+          <li
+            key={`post:loading:${i}`}
+            className="w-full h-10 bg-gray-200 rounded-md dark:bg-zinc-700"
+          ></li>
+        ))}
+      </ul>
+    );
   }
 
   if (!data) {
