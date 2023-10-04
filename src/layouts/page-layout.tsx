@@ -5,7 +5,7 @@ type Props = {
 };
 
 export const PageLayout: FC<Props> = ({ children }) => (
-  <main className="flex justify-center items-center bg-red-700 w-screen">
-    <div className="w-11/12 lg:w-1/2">{children}</div>
+  <main className="flex justify-center bg-zinc-900 w-screen min-h-screen text-white">
+    <div className="w-1/2 lg:11/12 mt-28">{children}</div>
   </main>
 );

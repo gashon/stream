@@ -4,10 +4,10 @@ import { PostForm } from "@/features";
 
 const PostPage: FC = () => {
   return (
-    <main className="w-full">
-      <h1>Posts</h1>
+    <div className="w-full">
+      <h1 className="text-2xl mb-10">Create a Stream</h1>
       <PostForm />
-    </main>
+    </div>
   );
 };
 
