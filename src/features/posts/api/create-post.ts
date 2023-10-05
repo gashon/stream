@@ -1,7 +1,7 @@
 import { useMutation, InfiniteQueryObserverResult } from "@tanstack/react-query";
 
 import { queryClient } from "@/lib/react-query";
-import type { PostCreateResponse, PostCreateRequest } from "@/types";
+import type { PostCreateResponse, PostCreateRequest, ErrorMessage } from "@/types";
 
 export const useCreatePostMutation = () => {
   return useMutation<PostCreateResponse, Error, PostCreateRequest>(
@@ -14,6 +14,10 @@ export const useCreatePostMutation = () => {
         body: JSON.stringify(body),
       });
       const data: PostCreateResponse = await res.json();
+
+      if (!res.ok) {
+        throw new Error("Failed");
+      }
 
       return data;
     },
@@ -36,7 +40,7 @@ export const useCreatePostMutation = () => {
         });
       },
       onError: (error) => {
-        console.log(error);
+        console.log("Post failed", error);
       },
     }
   );

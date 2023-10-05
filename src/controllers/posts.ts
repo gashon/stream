@@ -41,15 +41,19 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const cursor: string | null = req.query.cursor?.toString() || null;
   const limit = 20;
 
+  const isEditor = verifyToken<AuthToken>(token!)?.is_editor ?? false;
   const db = admin.firestore();
   let query = db
     .collection("posts")
     .where("deleted_at", "==", null)
     .where("is_draft", "==", false)
-    .where("is_private", "==", false)
     .orderBy("priority", "desc")
     .orderBy("created_at", "desc")
     .limit(limit);
+
+  if (!isEditor) {
+    query = query.where("is_private", "==", false);
+  }
 
   if (cursor) {
     const cursorDoc = await db.collection("posts").doc(cursor).get();
@@ -100,9 +104,9 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // get authToken from cookie
   try {
-    const authToken = verifyToken(getAuthToken(req)!) as AuthToken;
+    const authToken = verifyToken<AuthToken>(getAuthToken(req)!);
 
-    if (!authToken ?? !authToken.is_editor) {
+    if (!authToken?.is_editor) {
       if (req.body.password !== process.env.POST_PASSWORD) {
         res.status(401).send({
           error: "password is incorrect",
@@ -120,6 +124,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(401).send({
       error: "token is invalid",
     }); // Unauthorized
+    return;
   }
 
   const { content, is_draft, is_private } = req.body as PostCreateRequest;

@@ -24,6 +24,7 @@ const PostComponent: FC<PostComponent> = ({ onDelete, onPin, post }) => {
           {post.priority === 1 && (
             <p className="opacity-25 text-md font-semibold">Pinned</p>
           )}
+          {post.is_private && <p className="opacity-25 text-md underline">(Private)</p>}
           <div
             className="cursor-pointer opacity-75"
             onClick={() => onPin(post.post_id, post.priority == 0)}

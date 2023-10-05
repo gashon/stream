@@ -5,3 +5,7 @@ export type Resource = {
   updated_at: number;
   deleted_at: number | null;
 };
+
+export type ErrorMessage = {
+  error: string;
+};
