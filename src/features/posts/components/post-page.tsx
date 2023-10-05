@@ -25,18 +25,32 @@ const PostComponent: FC<
   };
 
   return (
-    <div className="my-5 w-full">
+    <div className="my-5  w-full border-b py-2 border-gray-500">
       <div className="flex justify-between">
-        <p className="opacity-50">{new Date(post.created_at).toDateString()} </p>
+        <p className="opacity-50 text-sm">{new Date(post.created_at).toDateString()} </p>
         {post.priority === 1 && (
-          <p className="opacity-25 text-sm font-semibold">Pinned</p>
+          <p className="opacity-25 text-md font-semibold">Pinned</p>
         )}
       </div>
-      <div className="flex flex-row items-center justify-between">
-        <p>{post.content}</p>
+      <div className="flex flex-col justify-between mt-1">
+        <p className="text-lg">{post.content}</p>
 
-        <div className="cursor-pointer p-2 opacity-75" onClick={onStarClick}>
-          {isStarred ? <AiFillStar className="text-yellow-300" /> : <AiOutlineStar />}
+        <div className="flex justify-end">
+          <div className="cursor-pointer opacity-75" onClick={onStarClick}>
+            {favoritePostMutation.isLoading ? (
+              <div className="relative">
+                <AiFillStar className="text-yellow-300" />
+                <AiOutlineStar
+                  className="absolute top-0 left-0 text-yellow-300"
+                  style={{ opacity: 0.5 }}
+                />
+              </div>
+            ) : isStarred ? (
+              <AiFillStar className="text-yellow-300" />
+            ) : (
+              <AiOutlineStar />
+            )}
+          </div>
         </div>
       </div>
     </div>

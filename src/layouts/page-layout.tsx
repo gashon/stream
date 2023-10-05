@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FC, ReactNode } from "react";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 
 type Props = {
   children: ReactNode;
@@ -9,7 +9,11 @@ type Props = {
   title: string;
 };
 
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({
+  display: "swap",
+  weight: "300",
+  subsets: ["latin-ext"],
+});
 
 const logWarningMessage = () =>
   console.log(
@@ -33,7 +37,7 @@ export const PageLayout: FC<Props> = ({
 
   return (
     <main
-      className={`${inter.className} flex justify-center bg-zinc-900 w-screen min-h-screen text-white`}
+      className={`${roboto.className} flex justify-center bg-zinc-900 w-screen min-h-screen text-white`}
     >
       <div className="w-1/2 lg:11/12 mt-28">
         <h1 className="text-2xl mb-10">{title}</h1>
