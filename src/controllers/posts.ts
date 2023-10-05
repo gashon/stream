@@ -86,7 +86,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     data: posts.map((post) => {
       return {
         ...post,
-        is_favorite: favorites.includes(post.post_id),
+        is_starred: favorites.includes(post.post_id),
       };
     }),
     has_more: posts.length === limit,

@@ -17,7 +17,9 @@ export type PostCreateRequest = {
 };
 
 export type PostGetResponse = {
-  data: Post[];
+  data: (Post & {
+    is_starred: boolean;
+  })[];
   has_more: boolean;
   cursor: string | null;
 };

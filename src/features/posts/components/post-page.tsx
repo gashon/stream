@@ -2,11 +2,11 @@ import { FC, useState } from "react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 
 import storage from "@/lib/storage";
-import type { Post, Favorites } from "@/types";
+import type { Post, Favorites, PostGetResponse } from "@/types";
 import { useFavoritePostMutation } from "@/features";
 
 type Props = {
-  posts: (Post | { is_favorite: boolean })[];
+  posts: PostGetResponse["data"];
 };
 
 const PostComponent: FC<
@@ -49,7 +49,7 @@ export const PostPage: FC<Props> = ({ posts }) => {
         return (
           <PostComponent
             key={`post:${post.post_id}`}
-            isStarred={post.is_favorite}
+            isStarred={post.is_starred}
             {...post}
           />
         );
