@@ -9,7 +9,7 @@ export const PostsList: FC = () => {
     useInfinitePostsQuery();
 
   if (isFetching && !isFetchingNextPage) {
-    return <LoadingSkeleton num={10} />;
+    return <LoadingSkeleton num={15} />;
   }
 
   if (!data) {
@@ -36,7 +36,7 @@ export const PostsList: FC = () => {
         dataLength={dataLength}
         next={fetchNextPage}
         hasMore={hasMore}
-        loader={<LoadingSkeleton num={2} />}
+        loader={<LoadingSkeleton num={5} />}
         pullDownToRefreshThreshold={50}
       >
         {data.pages.map(({ data: posts }, i) => (
