@@ -8,11 +8,12 @@ const inter = Inter({ subsets: ["latin"] });
 
 const logWarningMessage = () =>
   console.log(
-    ` Hi! Please, if you are clearing localStorage, please read the warning below :) - Gashon
+    `
     +----------------------------------------------------------------------------+
     | WARNING:                                                                   |
     | Clearing localStorage may cause undefined behavior. For safe data deletion,|
     | please clear both your cookie and localStorage.                            |
+    | Thanks! - Gashon                                                           |
     +----------------------------------------------------------------------------+
     `
   );
