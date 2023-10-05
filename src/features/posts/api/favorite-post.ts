@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
+import { toggleFavorite } from "@/util/storage";
 import { Post } from "@/types";
 
 type FavoritePostMutation = {
@@ -27,6 +28,7 @@ export const useFavoritePostMutation = ({
     {
       onSuccess: () => {
         setIsStarred((prev) => !prev);
+        toggleFavorite(postId);
       },
     }
   );
