@@ -21,13 +21,12 @@ const PostComponent: FC<
   });
 
   const onStarClick = () => {
-    // TODO add append method to storage lib
     favoritePostMutation.mutate();
   };
 
   return (
     <div className="my-5 w-full">
-      <p className="opacity-50">{new Date(post.created_at).toLocaleDateString()} </p>
+      <p className="opacity-50">{new Date(post.created_at).toDateString()} </p>
 
       <div className="flex flex-row items-center justify-between">
         <p>{post.content}</p>
@@ -47,7 +46,7 @@ export const PostPage: FC<Props> = ({ posts }) => {
     <div className="w-full p-0">
       {posts.map((post) => {
         const isStarred = starredPostIds.includes(post.post_id);
-        
+
         return (
           <PostComponent key={`post:${post.post_id}`} isStarred={isStarred} {...post} />
         );
