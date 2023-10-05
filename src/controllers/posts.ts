@@ -43,6 +43,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     .where("deleted_at", "==", null)
     .where("is_draft", "==", false)
     .where("is_private", "==", false)
+    .orderBy("priority", "desc")
     .orderBy("created_at", "desc")
     .limit(limit);
 

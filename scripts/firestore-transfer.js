@@ -69,6 +69,7 @@ var transferData = function (srcCollectionPath, destCollectionPath) { return __a
                         content: doc.data().post_content,
                         is_draft: true,
                         is_private: false,
+                        priority: 0,
                         created_at: doc.data().time_created.toDate().getTime(),
                         updated_at: doc.data().time_created.toDate().getTime(),
                         deleted_at: null,

@@ -5,6 +5,7 @@ type Post = {
   content: string;
   is_draft: boolean;
   is_private: boolean;
+  priority: number;
 
   created_at: number;
   updated_at: number;
@@ -47,6 +48,7 @@ const transferData = async (
         content: doc.data().post_content,
         is_draft: false,
         is_private: false,
+        priority: 0,
 
         created_at: doc.data().time_created.toDate().getTime(),
         updated_at: doc.data().time_created.toDate().getTime(),
