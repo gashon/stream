@@ -40,7 +40,12 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const limit = 20;
 
   const db = admin.firestore();
-  let query = db.collection("users").doc(userId).collection("favorites").limit(limit);
+  let query = db
+    .collection("users")
+    .doc(userId)
+    .collection("favorites")
+    .where("is_starred", "==", true)
+    .limit(limit);
 
   if (cursor) {
     const cursorDoc = await db.collection("posts").doc(cursor).get();
@@ -61,14 +66,15 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     postIds.push(doc.id);
   });
 
-  console.log("IDS", postIds);
-
   const posts: Post[] = [];
   for (const postId of postIds) {
     const postDoc = await db.collection("posts").doc(postId).get();
     const post = postDoc.data() as PostWithoutId;
+    console.log("DATA", post);
     posts.push({ ...post, post_id: postId });
   }
+
+  console.log("GOT", posts);
 
   res.status(200).json({
     data: posts,

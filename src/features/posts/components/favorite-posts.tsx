@@ -1,12 +1,12 @@
 import { FC } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+import { useInfiniteFavoritePostsQuery, PostPage } from "@/features";
 import { LoadingSkeleton } from "@/components";
-import { useInfinitePostsQuery, PostPage } from "@/features";
 
-export const PostsContainer: FC = () => {
+export const FavoritePostsList: FC = () => {
   const { data, error, isFetching, fetchNextPage, isFetchingNextPage } =
-    useInfinitePostsQuery();
+    useInfiniteFavoritePostsQuery();
 
   if (isFetching && !isFetchingNextPage) {
     return <LoadingSkeleton num={10} />;
@@ -40,7 +40,7 @@ export const PostsContainer: FC = () => {
         pullDownToRefreshThreshold={50}
       >
         {data.pages.map(({ data: posts }, i) => (
-          <PostPage key={`posts:page:${i}`} posts={posts} />
+          <PostPage key={`posts:favorites:page:${i}`} posts={posts} />
         ))}
       </InfiniteScroll>
     </div>

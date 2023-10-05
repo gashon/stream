@@ -11,10 +11,11 @@ const fetchPosts = async ({ pageParam = null }): Promise<FavoritePostsResponse> 
   return data;
 };
 
-export const useInfinitePostsQuery = () => {
+export const useInfiniteFavoritePostsQuery = () => {
   return useInfiniteQuery({
     queryKey: ["posts", "favorites"],
     queryFn: fetchPosts,
     getNextPageParam: (lastPage) => lastPage.cursor,
+    refetchOnWindowFocus: false,
   });
 };
