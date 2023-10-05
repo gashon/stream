@@ -16,5 +16,6 @@ export const useInfinitePostsQuery = () => {
     queryKey: ["posts"],
     queryFn: fetchPosts,
     getNextPageParam: (lastPage) => lastPage.cursor,
+    refetchOnWindowFocus: false,
   });
 };
