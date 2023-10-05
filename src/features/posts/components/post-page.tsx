@@ -33,7 +33,7 @@ const PostComponent: FC<
         )}
       </div>
       <div className="flex flex-col justify-between mt-1">
-        <p className="text-lg">{post.content}</p>
+        <p className="text-md">{post.content}</p>
 
         <div className="flex justify-end mt-1">
           <div className="cursor-pointer opacity-75" onClick={onStarClick}>

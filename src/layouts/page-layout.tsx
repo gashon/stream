@@ -46,7 +46,7 @@ export const PageLayout: FC<Props> = ({
 
         <section className="fixed bottom-10 right-10">
           <Link href={bottomLinkHref}>
-            <div className="flex flex-row justify-center items-center underline">
+            <div className="flex flex-row gap-2 justify-center items-center underline">
               {BottomLinkComponent}
             </div>
           </Link>
