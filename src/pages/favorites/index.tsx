@@ -7,7 +7,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function FavoritePostsPage() {
   return (
-    <PageLayout title="Stream.">
+    <PageLayout
+      title="Favoirte Streams."
+      BottomLinkComponent={<>Posts</>}
+      bottomLinkHref="/posts"
+    >
       <FavoritePostsList />
     </PageLayout>
   );

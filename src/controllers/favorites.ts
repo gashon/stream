@@ -65,8 +65,15 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     postIds.push(doc.id);
   });
 
-  console.log("GOT ids", postIds);
-  const postsSnap = await db.collection("posts").where("post_id", "in", postIds).get();
+  const postsSnap = await db
+    .collection("posts")
+    .where("post_id", "in", postIds)
+    .where("deleted_at", "==", null)
+    .where("is_draft", "==", false)
+    .where("is_private", "==", false)
+    .orderBy("priority", "desc")
+    .orderBy("created_at", "desc")
+    .get();
   const posts: Post[] = [];
   postsSnap.forEach((doc) => {
     posts.push(doc.data() as Post);

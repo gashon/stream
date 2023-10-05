@@ -5,7 +5,11 @@ import { PageLayout } from "@/layouts";
 
 const PostPage: FC = () => {
   return (
-    <PageLayout title="Create a Stream.">
+    <PageLayout
+      title="Create a Stream."
+      BottomLinkComponent={<>Posts</>}
+      bottomLinkHref="/posts"
+    >
       <div className="w-full">
         <PostForm />
       </div>
