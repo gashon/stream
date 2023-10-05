@@ -15,7 +15,8 @@ export const useCreatePostMutation = () => {
       });
       const data: PostCreateResponse = await res.json();
 
-      if (!res.ok) {
+      //@ts-ignore
+      if (!res.ok || data?.error) {
         throw new Error("Failed");
       }
 
