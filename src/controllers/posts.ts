@@ -67,28 +67,8 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     } as Post);
   });
 
-  const userId = verifyToken<AuthToken>(token!).user_id;
-  const favorites: string[] = [];
-  if (userId) {
-    const favoritesSnapshot = await db
-      .collection("users")
-      .doc(userId)
-      .collection("favorites")
-      .where("is_starred", "==", true)
-      .get();
-
-    favoritesSnapshot.forEach((doc) => {
-      favorites.push(doc.id);
-    });
-  }
-
   res.status(200).json({
-    data: posts.map((post) => {
-      return {
-        ...post,
-        is_starred: favorites.includes(post.post_id),
-      };
-    }),
+    data: posts,
     has_more: posts.length === limit,
     cursor: posts.length > 0 ? posts[posts.length - 1].post_id : null,
   });

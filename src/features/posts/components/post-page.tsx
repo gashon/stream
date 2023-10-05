@@ -4,6 +4,7 @@ import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import storage from "@/lib/storage";
 import type { Post, Favorites, PostGetResponse } from "@/types";
 import { useFavoritePostMutation } from "@/features";
+import { getFavorites } from "@/util/storage";
 
 type Props = {
   posts: PostGetResponse["data"];
@@ -40,18 +41,15 @@ const PostComponent: FC<
 };
 
 export const PostPage: FC<Props> = ({ posts }) => {
-  const starredPostIds =
-    storage.get<Favorites>("favorites")?.map(({ post_id }) => post_id) || [];
+  const starredPostIds = getFavorites();
 
   return (
     <div className="w-full p-0">
       {posts.map((post) => {
+        const isStarred = starredPostIds.includes(post.post_id);
+        
         return (
-          <PostComponent
-            key={`post:${post.post_id}`}
-            isStarred={post.is_starred}
-            {...post}
-          />
+          <PostComponent key={`post:${post.post_id}`} isStarred={isStarred} {...post} />
         );
       })}
     </div>
