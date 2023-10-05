@@ -26,8 +26,12 @@ const PostComponent: FC<
 
   return (
     <div className="my-5 w-full">
-      <p className="opacity-50">{new Date(post.created_at).toDateString()} </p>
-
+      <div className="flex justify-between">
+        <p className="opacity-50">{new Date(post.created_at).toDateString()} </p>
+        {post.priority === 1 && (
+          <p className="opacity-25 text-sm font-semibold">Pinned</p>
+        )}
+      </div>
       <div className="flex flex-row items-center justify-between">
         <p>{post.content}</p>
 
