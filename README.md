@@ -1,2 +1,2 @@
 ### Stream
-Upgrade of (legacy.blog.ghussein.org)[my former blog site]
+Upgrade of [my former blog site](legacy.blog.ghussein.org)
