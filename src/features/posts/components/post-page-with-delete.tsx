@@ -4,19 +4,15 @@ import { BsFillTrash3Fill } from "react-icons/bs";
 import type { Post, PostGetResponse } from "@/types";
 import { useDeletePostMutation } from "@/features";
 
-type Props = {
+type PostPageWithDelete = {
   posts: PostGetResponse["data"];
 };
 
-const PostComponent: FC<Post> = (post) => {
-  const deletePostMutation = useDeletePostMutation({
-    postId: post.post_id,
-  });
+type PostComponent = Post & {
+  onDelete: (postId: string) => void;
+};
 
-  const onTrashClick = () => {
-    deletePostMutation.mutate();
-  };
-
+const PostComponent: FC<PostComponent> = ({ onDelete, ...post }) => {
   return (
     <div className="my-5  w-full border-b py-2 border-gray-500">
       <div className="flex justify-between">
@@ -29,7 +25,10 @@ const PostComponent: FC<Post> = (post) => {
         <p className="text-md">{post.content}</p>
 
         <div className="flex justify-end mt-1">
-          <div className="cursor-pointer opacity-75" onClick={onTrashClick}>
+          <div
+            className="cursor-pointer opacity-75"
+            onClick={() => onDelete(post.post_id)}
+          >
             <BsFillTrash3Fill />
           </div>
         </div>
@@ -38,11 +37,23 @@ const PostComponent: FC<Post> = (post) => {
   );
 };
 
-export const PostPageWithDelete: FC<Props> = ({ posts }) => {
+export const PostPageWithDelete: FC<PostPageWithDelete> = ({ posts }) => {
+  const deletePostMutation = useDeletePostMutation();
+
+  const onDelete = (postId: string) => {
+    deletePostMutation.mutate({ postId });
+  };
+
   return (
     <div className="w-full p-0">
       {posts.map((post) => {
-        return <PostComponent key={`post:delete:${post.post_id}`} {...post} />;
+        return (
+          <PostComponent
+            onDelete={onDelete}
+            key={`post:delete:${post.post_id}`}
+            {...post}
+          />
+        );
       })}
     </div>
   );

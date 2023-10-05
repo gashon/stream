@@ -7,9 +7,9 @@ type DeletePostMutation = {
   postId: Post["post_id"];
 };
 
-export const useDeletePostMutation = ({ postId }: DeletePostMutation) => {
+export const useDeletePostMutation = () => {
   return useMutation<PostDeleteResponse, Error, DeletePostMutation>(
-    async () => {
+    async ({ postId }) => {
       const res = await fetch("/api/posts", {
         method: "DELETE",
         headers: {
@@ -23,12 +23,12 @@ export const useDeletePostMutation = ({ postId }: DeletePostMutation) => {
     },
     {
       // use post_id to remove post from state
-      onSuccess: (data) => {
+      onSuccess: ({ data }) => {
         queryClient.setQueryData<Post[]>(["posts"], (prev: any) => {
           const updatedPages = prev.pages.map((page: any) => {
             return {
               ...page,
-              data: page.data.filter((post: Post) => post.post_id !== postId),
+              data: page.data.filter((post: Post) => post.post_id !== data.post_id),
             };
           });
 
