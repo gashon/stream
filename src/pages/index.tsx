@@ -1,8 +1,7 @@
 import { AiFillStar } from "react-icons/ai";
 
-import { PostsList } from "@/features";
+import { PostsList, PostPage } from "@/features";
 import { PageLayout } from "@/layouts";
-
 
 export default function FavoritePostsPage() {
   return (
@@ -16,7 +15,7 @@ export default function FavoritePostsPage() {
       }
       bottomLinkHref="/favorites"
     >
-      <PostsList />
+      <PostsList PageComponent={PostPage} />
     </PageLayout>
   );
 }

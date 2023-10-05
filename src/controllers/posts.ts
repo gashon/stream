@@ -9,12 +9,16 @@ import type { Post, PostCreateRequest, AuthToken } from "@/types";
 
 export const postsHandler = {
   handle: (req: NextApiRequest, res: NextApiResponse) => {
+    console.log("METHOD", req.method);
     switch (req.method) {
       case "GET":
         handleGetRequest(req, res);
         break;
       case "POST":
         handlePostRequest(req, res);
+        break;
+      case "DELETE":
+        handlePostDeleteRequest(req, res);
         break;
       default:
         res.status(405).end(); // Method Not Allowed
@@ -145,4 +149,48 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   await db.collection("posts").doc(postId).set(post);
 
   res.status(201).json({ data: post });
+};
+
+const handlePostDeleteRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+  // get authToken from cookie
+  const authToken = verifyToken(getAuthToken(req)!) as AuthToken;
+
+  if (!authToken ?? !authToken.is_editor) {
+    res.status(401).send({
+      error: "token is invalid",
+    }); // Unauthorized
+    return;
+  }
+
+  const postId = req.body.post_id;
+  if (!postId) {
+    res.status(400).send({
+      error: "postId is required",
+    });
+    return;
+  }
+
+  const db = admin.firestore();
+
+  const postRef = db.collection("posts").doc(postId);
+  const postDoc = await postRef.get();
+
+  if (!postDoc.exists) {
+    res.status(404).end(); // Not Found
+    return;
+  }
+
+  const post = postDoc.data() as Post;
+  if (post.deleted_at) {
+    res.status(400).send({
+      error: "post is already deleted",
+    });
+    return;
+  }
+
+  await postRef.update({
+    deleted_at: new Date().getTime(),
+  });
+
+  res.status(200).json({ data: post });
 };

@@ -27,3 +27,7 @@ export type PostGetResponse = {
 export type PostCreateResponse = {
   data: Post;
 };
+
+export type PostDeleteResponse = {
+  data: Post;
+};

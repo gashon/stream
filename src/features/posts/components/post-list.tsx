@@ -1,10 +1,15 @@
 import { FC } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { useInfinitePostsQuery, PostPage } from "@/features";
+import { Post } from "@/types";
+import { useInfinitePostsQuery } from "@/features";
 import { LoadingSkeleton } from "@/components";
 
-export const PostsList: FC = () => {
+type Props = {
+  PageComponent: React.ComponentType<{ posts: Post[] }>;
+};
+
+export const PostsList: FC<Props> = ({ PageComponent }) => {
   const { data, error, isFetching, fetchNextPage, isFetchingNextPage } =
     useInfinitePostsQuery();
 
@@ -40,7 +45,7 @@ export const PostsList: FC = () => {
         pullDownToRefreshThreshold={50}
       >
         {data.pages.map(({ data: posts }, i) => (
-          <PostPage key={`posts:page:${i}`} posts={posts} />
+          <PageComponent key={`posts:page:${i}`} posts={posts} />
         ))}
       </InfiniteScroll>
     </div>
