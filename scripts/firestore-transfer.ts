@@ -6,6 +6,7 @@ type Post = {
   is_draft: boolean;
   is_private: boolean;
   priority: number;
+  is_legacy: boolean;
 
   created_at: number;
   updated_at: number;
@@ -44,11 +45,14 @@ const transferData = async (
     snapshot.docs.forEach((doc: QueryDocumentSnapshot) => {
       const destDocRef = destCollectionRef.doc(doc.id);
 
-      const data: Omit<Post, "post_id"> = {
+      const postId = doc.id;
+      const data: Post = {
         content: doc.data().post_content,
-        is_draft: false,
+        is_draft: true,
         is_private: false,
+        is_legacy: true,
         priority: 0,
+        post_id: postId,
 
         created_at: doc.data().time_created.toDate().getTime(),
         updated_at: doc.data().time_created.toDate().getTime(),
@@ -67,6 +71,6 @@ const transferData = async (
 };
 
 // Usage
-const srcCollectionPath = "posts";
+const srcCollectionPath = "drafts";
 const destCollectionPath = "posts";
 transferData(srcCollectionPath, destCollectionPath);

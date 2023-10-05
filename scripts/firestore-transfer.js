@@ -65,11 +65,14 @@ var transferData = function (srcCollectionPath, destCollectionPath) { return __a
                 batch_1 = destinationFirestore.batch();
                 snapshot.docs.forEach(function (doc) {
                     var destDocRef = destCollectionRef_1.doc(doc.id);
+                    var postId = doc.id;
                     var data = {
                         content: doc.data().post_content,
                         is_draft: true,
                         is_private: false,
+                        is_legacy: true,
                         priority: 0,
+                        post_id: postId,
                         created_at: doc.data().time_created.toDate().getTime(),
                         updated_at: doc.data().time_created.toDate().getTime(),
                         deleted_at: null,

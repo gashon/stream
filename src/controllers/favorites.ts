@@ -60,21 +60,16 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const querySnapshot = await query.get();
 
-  // TODO fix n+1 problem here
   const postIds: string[] = [];
   querySnapshot.forEach((doc) => {
     postIds.push(doc.id);
   });
 
+  const postsSnap = await db.collection("posts").where("post_id", "in", postIds).get();
   const posts: Post[] = [];
-  for (const postId of postIds) {
-    const postDoc = await db.collection("posts").doc(postId).get();
-    const post = postDoc.data() as PostWithoutId;
-    console.log("DATA", post);
-    posts.push({ ...post, post_id: postId });
-  }
-
-  console.log("GOT", posts);
+  postsSnap.forEach((doc) => {
+    posts.push(doc.data() as Post);
+  });
 
   res.status(200).json({
     data: posts,

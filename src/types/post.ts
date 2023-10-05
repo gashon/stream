@@ -3,6 +3,7 @@ import type { Resource } from "@/types";
 export type Post = {
   post_id: string;
 
+  is_legacy: boolean;
   priority: number; //is_pinned = true
   content: string;
   is_draft: boolean;
