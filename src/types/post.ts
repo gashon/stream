@@ -3,6 +3,7 @@ import type { Resource } from "@/types";
 export type Post = {
   post_id: string;
 
+  priority: number; //is_pinned = true
   content: string;
   is_draft: boolean;
   is_private: boolean;
@@ -20,4 +21,8 @@ export type PostGetResponse = {
   data: Post[];
   has_more: boolean;
   cursor: string | null;
+};
+
+export type PostCreateResponse = {
+  data: Post;
 };

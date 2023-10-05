@@ -26,15 +26,16 @@ export const postsHandler = {
 
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   // add anon cookie
+  let token = getAuthToken(req);
   if (!getAuthToken(req)) {
-    const token = createAnonToken({ is_editor: false });
+    token = createAnonToken({ is_editor: false });
 
     // set cookie
     setAuthToken(res, token);
   }
 
   const cursor: string | null = req.query.cursor?.toString() || null;
-  const limit = 10;
+  const limit = 20;
 
   const db = admin.firestore();
   let query = db
@@ -42,6 +43,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     .where("deleted_at", "==", null)
     .where("is_draft", "==", false)
     .where("is_private", "==", false)
+    .orderBy("priority", "desc")
     .orderBy("created_at", "desc")
     .limit(limit);
 
@@ -117,7 +119,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { content, is_draft, is_private } = req.body as PostCreateRequest;
-  if (content.length == 0) {
+  if ((content ?? "").length == 0) {
     res.status(400).send({
       error: "content is required",
     });

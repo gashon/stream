@@ -17,12 +17,15 @@
     "next": "13.5.4",
     "react": "^18",
     "react-dom": "^18",
-    "react-infinite-scroll-component": "^6.1.0"
+    "react-infinite-scroll-component": "^6.1.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@google-cloud/firestore": "^7.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^9.0.4",
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",

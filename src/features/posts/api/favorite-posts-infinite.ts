@@ -1,21 +1,20 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import type { PostGetResponse } from "@/types";
+import type { FavoritePostsResponse } from "@/types";
 
-const fetchPosts = async ({ pageParam = null }): Promise<PostGetResponse> => {
+const fetchPosts = async ({ pageParam = null }): Promise<FavoritePostsResponse> => {
   const query = pageParam ? `?cursor=${pageParam}` : "";
 
-  const res = await fetch(`/api/posts${query}`);
-  const data: PostGetResponse = await res.json();
+  const res = await fetch(`/api/posts/favorites${query}`);
+  const data: FavoritePostsResponse = await res.json();
 
   return data;
 };
 
 export const useInfinitePostsQuery = () => {
   return useInfiniteQuery({
-    queryKey: ["posts"],
+    queryKey: ["posts", "favorites"],
     queryFn: fetchPosts,
     getNextPageParam: (lastPage) => lastPage.cursor,
-    refetchOnWindowFocus: false,
   });
 };

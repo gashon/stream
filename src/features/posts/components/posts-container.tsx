@@ -5,9 +5,10 @@ import { LoadingSkeleton } from "@/components";
 import { useInfinitePostsQuery, PostPage } from "@/features";
 
 export const PostsContainer: FC = () => {
-  const { data, error, isFetching, fetchNextPage } = useInfinitePostsQuery();
+  const { data, error, isFetching, fetchNextPage, isFetchingNextPage } =
+    useInfinitePostsQuery();
 
-  if (isFetching) {
+  if (isFetching && !isFetchingNextPage) {
     return <LoadingSkeleton num={10} />;
   }
 
@@ -25,12 +26,18 @@ export const PostsContainer: FC = () => {
   const hasMore = data.pages[data.pages.length - 1]?.has_more;
 
   return (
-    <div className="w-full border-r pr-6">
+    <div
+      className="w-full"
+      style={{
+        height: "calc(100vh - 10rem)",
+      }}
+    >
       <InfiniteScroll
         dataLength={dataLength}
         next={fetchNextPage}
         hasMore={hasMore}
         loader={<h4 className="text-white">Loading...</h4>}
+        pullDownToRefreshThreshold={50}
       >
         {data.pages.map(({ data: posts }, i) => (
           <PostPage key={`posts:page:${i}`} posts={posts} />
