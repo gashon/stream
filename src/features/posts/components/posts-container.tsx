@@ -36,7 +36,7 @@ export const PostsContainer: FC = () => {
         dataLength={dataLength}
         next={fetchNextPage}
         hasMore={hasMore}
-        loader={<h4 className="text-white">Loading...</h4>}
+        loader={<LoadingSkeleton num={2} />}
         pullDownToRefreshThreshold={50}
       >
         {data.pages.map(({ data: posts }, i) => (
