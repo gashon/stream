@@ -1,18 +1,21 @@
 import { FC } from "react";
 import { BsFillTrash3Fill } from "react-icons/bs";
+import { AiFillPushpin } from "react-icons/ai";
 
 import type { Post, PostGetResponse } from "@/types";
-import { useDeletePostMutation } from "@/features";
+import { useDeletePostMutation, useUpdatePostMutation } from "@/features";
 
 type PostPageWithDelete = {
   posts: PostGetResponse["data"];
 };
 
-type PostComponent = Post & {
+type PostComponent = {
+  post: Post;
   onDelete: (postId: string) => void;
+  onPin: (postId: string, pinIt: boolean) => void;
 };
 
-const PostComponent: FC<PostComponent> = ({ onDelete, ...post }) => {
+const PostComponent: FC<PostComponent> = ({ onDelete, onPin, post }) => {
   return (
     <div className="my-5  w-full border-b py-2 border-gray-500">
       <div className="flex justify-between">
@@ -23,6 +26,10 @@ const PostComponent: FC<PostComponent> = ({ onDelete, ...post }) => {
       </div>
       <div className="flex flex-col justify-between mt-1">
         <p className="text-md">{post.content}</p>
+
+        <div onClick={() => onPin(post.post_id, post.priority == 0)}>
+          <AiFillPushpin />
+        </div>
 
         <div className="flex justify-end mt-1">
           <div
@@ -39,9 +46,14 @@ const PostComponent: FC<PostComponent> = ({ onDelete, ...post }) => {
 
 export const PostPageWithDelete: FC<PostPageWithDelete> = ({ posts }) => {
   const deletePostMutation = useDeletePostMutation();
+  const updatePostMutation = useUpdatePostMutation();
 
   const onDelete = (postId: string) => {
     deletePostMutation.mutate({ postId });
+  };
+
+  const onPin = (postId: string, pinIt: boolean) => {
+    updatePostMutation.mutate({ postId, pinIt });
   };
 
   return (
@@ -49,9 +61,10 @@ export const PostPageWithDelete: FC<PostPageWithDelete> = ({ posts }) => {
       {posts.map((post) => {
         return (
           <PostComponent
-            onDelete={onDelete}
             key={`post:delete:${post.post_id}`}
-            {...post}
+            onDelete={onDelete}
+            onPin={onPin}
+            post={post}
           />
         );
       })}

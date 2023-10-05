@@ -1,15 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
 
-import { ANON_AUTH_TOKEN } from "@/const";
 import { createAnonToken, setAuthToken, getAuthToken } from "@/utils";
 import { verifyToken } from "@/lib/jwt";
 import { admin } from "@/lib/firebase-admin";
-import type { Post, PostCreateRequest, AuthToken } from "@/types";
+import type { Post, PostPatchRequest, PostCreateRequest, AuthToken } from "@/types";
 
 export const postsHandler = {
   handle: (req: NextApiRequest, res: NextApiResponse) => {
-    console.log("METHOD", req.method);
     switch (req.method) {
       case "GET":
         handleGetRequest(req, res);
@@ -19,6 +17,9 @@ export const postsHandler = {
         break;
       case "DELETE":
         handlePostDeleteRequest(req, res);
+        break;
+      case "PATCH":
+        handlePatchRequest(req, res);
         break;
       default:
         res.status(405).end(); // Method Not Allowed
@@ -193,4 +194,73 @@ const handlePostDeleteRequest = async (req: NextApiRequest, res: NextApiResponse
   });
 
   res.status(200).json({ data: post });
+};
+
+const handlePatchRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+  // get authToken from cookie
+  const authToken = verifyToken(getAuthToken(req)!) as AuthToken;
+
+  if (!authToken ?? !authToken.is_editor) {
+    res.status(401).send({
+      error: "token is invalid",
+    }); // Unauthorized
+    return;
+  }
+
+  const postId = req.body.post_id;
+  if (!postId) {
+    res.status(400).send({
+      error: "postId is required",
+    });
+    return;
+  }
+
+  const db = admin.firestore();
+
+  const postRef = db.collection("posts").doc(postId);
+  const postDoc = await postRef.get();
+
+  if (!postDoc.exists) {
+    res.status(404).end(); // Not Found
+    return;
+  }
+
+  const post = postDoc.data() as Post;
+
+  const { content, is_draft, is_private, priority } = req.body as PostPatchRequest;
+  if (priority && (priority < 0 || priority > 1)) {
+    res.status(400).send({
+      error: "priority must be 0 or 1",
+    });
+    return;
+  }
+
+  // only update fields that are passed in
+  const updatedFields: Partial<Post> = {};
+  if (content) {
+    updatedFields.content = content;
+  }
+  if (is_draft !== undefined) {
+    updatedFields.is_draft = is_draft;
+  }
+  if (is_private !== undefined) {
+    updatedFields.is_private = is_private;
+  }
+  if (priority !== undefined) {
+    updatedFields.priority = priority;
+  }
+
+  const updateData = {
+    ...updatedFields,
+    updated_at: new Date().getTime(),
+  };
+
+  await postRef.update(updateData);
+
+  res.status(200).json({
+    data: {
+      ...post,
+      ...updateData,
+    },
+  });
 };

@@ -18,6 +18,10 @@ export type PostCreateRequest = {
   password?: string;
 };
 
+export type PostPatchRequest = Partial<
+  Pick<Post, "content" | "is_draft" | "is_private" | "priority">
+>;
+
 export type PostGetResponse = {
   data: Post[];
   has_more: boolean;
@@ -29,5 +33,9 @@ export type PostCreateResponse = {
 };
 
 export type PostDeleteResponse = {
+  data: Post;
+};
+
+export type PostPatchResponse = {
   data: Post;
 };
