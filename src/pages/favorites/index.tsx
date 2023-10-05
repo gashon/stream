@@ -10,7 +10,7 @@ export default function FavoritePostsPage() {
     <PageLayout
       title="Favoirte Streams."
       BottomLinkComponent={<>Posts</>}
-      bottomLinkHref="/posts"
+      bottomLinkHref="/"
     >
       <FavoritePostsList />
     </PageLayout>

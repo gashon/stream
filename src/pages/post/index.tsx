@@ -8,7 +8,7 @@ const PostPage: FC = () => {
     <PageLayout
       title="Create a Stream."
       BottomLinkComponent={<>Posts</>}
-      bottomLinkHref="/posts"
+      bottomLinkHref="/"
     >
       <div className="w-full">
         <PostForm />
