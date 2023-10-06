@@ -65,6 +65,15 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     postIds.push(doc.id);
   });
 
+  if (postIds.length === 0) {
+    res.status(200).json({
+      data: [],
+      has_more: false,
+      cursor: null,
+    });
+    return;
+  }
+
   const postsSnap = await db
     .collection("posts")
     .where("post_id", "in", postIds)
