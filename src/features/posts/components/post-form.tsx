@@ -26,8 +26,8 @@ export const PostForm: FC = () => {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values: FormValues, actions: FormikHelpers<FormValues>) => {
-        createPostMutation.mutate(values);
+      onSubmit={async (values: FormValues, actions: FormikHelpers<FormValues>) => {
+        await createPostMutation.mutateAsync(values);
 
         if (createPostMutation.isError) {
           setErrorStatus(ErrorStatus.AuthError);
