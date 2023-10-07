@@ -1,5 +1,4 @@
 import admin from "firebase-admin";
-import serviceAccount from "../config/service-account-key.json";
 
 console.log("Initializing Firebase Admin");
 
