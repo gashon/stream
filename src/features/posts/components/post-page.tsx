@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 
-import storage from "@/lib/storage";
+import { PostPriority } from "@/const";
 import type { Post, Favorites, PostGetResponse } from "@/types";
 import { useFavoritePostMutation } from "@/features";
 import { getFavorites } from "@/util/storage";
@@ -41,7 +41,7 @@ const PostComponent: FC<
         <p className="opacity-50 text-sm">{new Date(post.created_at).toDateString()} </p>
 
         <div className="flex flex-row gap-2">
-          {post.priority === 1 && (
+          {post.priority === PostPriority.Pinned && (
             <p className="opacity-25 text-md font-semibold">Pinned</p>
           )}
           {post.is_private && <p className="opacity-25 text-md underline">(Private)</p>}

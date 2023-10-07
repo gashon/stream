@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
 
+import { PostPriority } from "@/const";
 import { createAnonToken, setAuthToken, getAuthToken } from "@/utils";
 import { verifyToken } from "@/lib/jwt";
 import { admin } from "@/lib/firebase-admin";
@@ -142,7 +143,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     content,
     is_draft,
     is_private,
-    priority: 0,
+    priority: PostPriority.Default,
     post_id: postId,
     is_legacy: false,
 
@@ -233,7 +234,7 @@ const handlePatchRequest = async (req: NextApiRequest, res: NextApiResponse) => 
   const post = postDoc.data() as Post;
 
   const { content, is_draft, is_private, priority } = req.body as PostPatchRequest;
-  if (priority && (priority < 0 || priority > 1)) {
+  if (priority && priority != PostPriority.Pinned && priority != PostPriority.Default) {
     res.status(400).send({
       error: "priority must be 0 or 1",
     });

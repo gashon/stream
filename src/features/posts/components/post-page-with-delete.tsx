@@ -2,6 +2,7 @@ import { FC } from "react";
 import { BsFillTrash3Fill } from "react-icons/bs";
 import { AiFillPushpin } from "react-icons/ai";
 
+import { PostPriority } from "@/const";
 import type { Post, PostGetResponse } from "@/types";
 import { useDeletePostMutation, useUpdatePostMutation } from "@/features";
 
@@ -32,7 +33,7 @@ const PostComponent: FC<PostComponent> = ({ onDelete, onPin, post }) => {
       <div className="flex justify-between">
         <p className="opacity-50 text-sm">{new Date(post.created_at).toDateString()} </p>
         <div className="flex flex-row gap-2 items-center">
-          {post.priority === 1 && (
+          {post.priority === PostPriority.Pinned && (
             <p className="opacity-25 text-md font-semibold">Pinned</p>
           )}
           {post.is_private && <p className="opacity-25 text-md underline">(Private)</p>}
