@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { Formik, Form, Field, FormikHelpers } from "formik";
+import { FC, useState, useEffect } from "react";
+import { Formik, Form, Field, FormikHelpers, useFormikContext } from "formik";
 
 import type { PostCreateRequest } from "@/types";
 import { useCreatePostMutation } from "@/features";
@@ -57,17 +57,29 @@ const PasswordInput: FC = () => (
   </div>
 );
 
-const ContentInput: FC = () => (
-  <div className="flex flex-col">
-    <Field
-      id="content"
-      name="content"
-      placeholder="Post..."
-      className="p-2 border rounded-md text-black"
-      autoComplete="off"
-    />
-  </div>
-);
+const ContentInput: FC = () => {
+  const [numRows, setNumRows] = useState(2); // Initialize with default row number
+  const { values } = useFormikContext<{ content: string }>();
+
+  useEffect(() => {
+    setNumRows(values.content.split("\n").length || 1); // Calculate row number based on new lines
+  }, [values.content]);
+
+  return (
+    <div className="flex flex-col">
+      <Field
+        as="textarea"
+        id="content"
+        name="content"
+        placeholder="Post..."
+        className="p-2 border rounded-md text-black resize-none"
+        rows={numRows} // Set dynamic row number
+        style={{ overflowY: "auto" }}
+        autoComplete="off"
+      />
+    </div>
+  );
+};
 
 const ControlPanel: FC = () => (
   <div className="flex justify-between">

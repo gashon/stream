@@ -24,6 +24,17 @@ const PostComponent: FC<
     favoritePostMutation.mutate();
   };
 
+  const formattedContent = post.content.split("\n").map((str, index, array) =>
+    index === array.length - 1 ? (
+      str
+    ) : (
+      <>
+        {str}
+        <br />
+      </>
+    )
+  );
+
   return (
     <div className="my-5  w-full border-b py-2 border-gray-500">
       <div className="flex justify-between">
@@ -37,7 +48,7 @@ const PostComponent: FC<
         </div>
       </div>
       <div className="flex flex-col justify-between mt-1">
-        <p className="text-md">{post.content}</p>
+        <p className="text-md">{formattedContent}</p>
 
         <div className="flex justify-end mt-1">
           <div className="cursor-pointer opacity-75" onClick={onStarClick}>
