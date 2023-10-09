@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FC, ReactNode } from "react";
 import { Roboto } from "next/font/google";
+import { Analytics } from '@vercel/analytics/react';
 
 type Props = {
   children: ReactNode;
@@ -36,6 +37,7 @@ export const PageLayout: FC<Props> = ({
   logWarningMessage();
 
   return (
+    <>
     <main
       className={`${roboto.className} flex justify-center bg-zinc-900 w-screen min-h-screen text-white`}
     >
@@ -53,5 +55,7 @@ export const PageLayout: FC<Props> = ({
         </section>
       </div>
     </main>
+    <Analytics />
+    </>
   );
 };
