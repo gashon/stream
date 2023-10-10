@@ -2,6 +2,7 @@ import { FC } from "react";
 import { BsFillTrash3Fill } from "react-icons/bs";
 import { AiFillPushpin } from "react-icons/ai";
 
+import { parseMarkdown } from "@/lib/parser";
 import { PostPriority } from "@/const";
 import type { Post, PostGetResponse } from "@/types";
 import { useDeletePostMutation, useUpdatePostMutation } from "@/features";
@@ -17,16 +18,7 @@ type PostComponent = {
 };
 
 const PostComponent: FC<PostComponent> = ({ onDelete, onPin, post }) => {
-  const formattedContent = post.content.split("\n").map((str, index, array) =>
-    index === array.length - 1 ? (
-      str
-    ) : (
-      <>
-        {str}
-        <br />
-      </>
-    )
-  );
+  const contentHtml = parseMarkdown(post.content);
 
   return (
     <div className="my-5  w-full border-b py-2 border-gray-500">
@@ -46,7 +38,8 @@ const PostComponent: FC<PostComponent> = ({ onDelete, onPin, post }) => {
         </div>
       </div>
       <div className="flex flex-col justify-between mt-1">
-        <p className="text-md">{formattedContent}</p>
+        {/* Sanitized by DOMPurify */}
+        <p className="text-md" dangerouslySetInnerHTML={{ __html: contentHtml }}></p>
 
         <div className="flex justify-end mt-1">
           <div

@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 
+import { parseMarkdown } from "@/lib/parser";
 import { PostPriority } from "@/const";
 import type { Post, Favorites, PostGetResponse } from "@/types";
 import { useFavoritePostMutation } from "@/features";
@@ -24,16 +25,7 @@ const PostComponent: FC<
     favoritePostMutation.mutate();
   };
 
-  const formattedContent = post.content.split("\n").map((str, index, array) =>
-    index === array.length - 1 ? (
-      str
-    ) : (
-      <>
-        {str}
-        <br />
-      </>
-    )
-  );
+  const contentHtml = parseMarkdown(post.content);
 
   return (
     <div className="my-5  w-full border-b py-2 border-gray-500">
@@ -48,7 +40,8 @@ const PostComponent: FC<
         </div>
       </div>
       <div className="flex flex-col justify-between mt-1">
-        <p className="text-md">{formattedContent}</p>
+        {/* Sanitized by DOMPurify */}
+        <p className="text-md" dangerouslySetInnerHTML={{ __html: contentHtml }}></p>
 
         <div className="flex justify-end mt-1">
           <div className="cursor-pointer opacity-75" onClick={onStarClick}>
