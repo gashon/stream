@@ -8,3 +8,7 @@ export type UserAnalytic = {
   ip: string;
   is_editor: boolean;
 } & Resource;
+
+export type AnalyticsGetResponse = {
+  data: UserAnalytic[];
+};
