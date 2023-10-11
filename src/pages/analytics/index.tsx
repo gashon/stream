@@ -5,16 +5,7 @@ import { PageLayout } from "@/layouts";
 
 export default function AnalyticsPage() {
   return (
-    <PageLayout
-      title="Stream."
-      BottomLinkComponent={
-        <>
-          Favorites
-          <AiFillStar className="text-yellow-300" />
-        </>
-      }
-      bottomLinkHref="/favorites"
-    >
+    <PageLayout title="Analytics" BottomLinkComponent={<>Posts</>} bottomLinkHref="/">
       <AnalyticsList />
     </PageLayout>
   );
