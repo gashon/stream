@@ -75,7 +75,12 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     query.get(),
     analyticsDoc.set(
       {
-        [userId]: admin.firestore.FieldValue.increment(1),
+        [userId]: {
+          views: admin.firestore.FieldValue.increment(1),
+          ua: req.headers["user-agent"],
+          ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+          is_editor: isEditor,
+        },
       },
       { merge: true }
     ),
