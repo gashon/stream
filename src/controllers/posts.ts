@@ -39,11 +39,15 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     setAuthToken(res, token);
   }
 
+  const db = admin.firestore();
+  // record analytics in firestore
+  const userId = verifyToken<AuthToken>(getAuthToken(req)!).user_id;
+  const analyticsDoc = db.collection("analytics").doc("views");
+
   const cursor: string | null = req.query.cursor?.toString() || null;
   const limit = 20;
 
   const isEditor = verifyToken<AuthToken>(token!)?.is_editor ?? false;
-  const db = admin.firestore();
   let query = db
     .collection("posts")
     .where("deleted_at", "==", null)
@@ -67,7 +71,15 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     query = query.startAfter(cursorDoc);
   }
 
-  const querySnapshot = await query.get();
+  const [querySnapshot, _] = await Promise.all([
+    query.get(),
+    analyticsDoc.set(
+      {
+        [userId]: admin.firestore.FieldValue.increment(1),
+      },
+      { merge: true }
+    ),
+  ]);
 
   const posts: Post[] = [];
   querySnapshot.forEach((doc) => {
