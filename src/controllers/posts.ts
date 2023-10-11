@@ -5,7 +5,13 @@ import { PostPriority } from "@/const";
 import { createAnonToken, setAuthToken, getAuthToken } from "@/utils";
 import { verifyToken } from "@/lib/jwt";
 import { admin } from "@/lib/firebase-admin";
-import type { Post, PostPatchRequest, PostCreateRequest, AuthToken } from "@/types";
+import type {
+  Post,
+  PostPatchRequest,
+  PostCreateRequest,
+  AuthToken,
+  UserAnalytic,
+} from "@/types";
 
 export const postsHandler = {
   handle: (req: NextApiRequest, res: NextApiResponse) => {
@@ -71,16 +77,23 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     query = query.startAfter(cursorDoc);
   }
 
+  const analytics: UserAnalytic = {
+    user_id: userId,
+    views: admin.firestore.FieldValue.increment(1),
+    ua: req.headers["user-agent"],
+    ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+    is_editor: isEditor,
+
+    created_at: new Date().getTime(),
+    updated_at: new Date().getTime(),
+    deleted_at: null,
+  } as UserAnalytic;
+
   const [querySnapshot, _] = await Promise.all([
     query.get(),
     analyticsDoc.set(
       {
-        [userId]: {
-          views: admin.firestore.FieldValue.increment(1),
-          ua: req.headers["user-agent"],
-          ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
-          is_editor: isEditor,
-        },
+        [userId]: analytics,
       },
       { merge: true }
     ),
