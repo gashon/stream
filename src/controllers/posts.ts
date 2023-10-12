@@ -56,7 +56,19 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const cursor: string | null = queryParams.cursor?.toString() || null;
   const limit = 20;
 
+  // only editors can see drafts
   const queryIsDraft = queryParams.is_draft?.toString() === "true";
+  if (queryIsDraft) {
+    const authToken = verifyToken<AuthToken>(token!);
+
+    if (!authToken?.is_editor) {
+      res.status(401).send({
+        error: "token is invalid",
+      }); // Unauthorized
+      return;
+    }
+  }
+
   const isEditor = verifyToken<AuthToken>(token!)?.is_editor ?? false;
   let query = db
     .collection("posts")
