@@ -11,7 +11,7 @@ type Props = {
 
 export const PostsList: FC<Props> = ({ PageComponent }) => {
   const { data, error, isFetching, fetchNextPage, isFetchingNextPage } =
-    useInfinitePostsQuery();
+    useInfinitePostsQuery({ isDraft: false });
 
   if (isFetching && !isFetchingNextPage) {
     return <LoadingSkeleton num={15} />;

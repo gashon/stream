@@ -9,6 +9,7 @@ import type {
   Post,
   PostPatchRequest,
   PostCreateRequest,
+  PostGetRequest,
   AuthToken,
   UserAnalytic,
 } from "@/types";
@@ -50,14 +51,17 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const userId = verifyToken<AuthToken>(getAuthToken(req)!).user_id;
   const analyticsDoc = db.collection("analytics").doc("views");
 
-  const cursor: string | null = req.query.cursor?.toString() || null;
+  const queryParams = req.query as PostGetRequest;
+
+  const cursor: string | null = queryParams.cursor?.toString() || null;
   const limit = 20;
 
+  const queryIsDraft = queryParams.is_draft?.toString() === "true";
   const isEditor = verifyToken<AuthToken>(token!)?.is_editor ?? false;
   let query = db
     .collection("posts")
     .where("deleted_at", "==", null)
-    .where("is_draft", "==", false)
+    .where("is_draft", "==", queryIsDraft)
     .orderBy("priority", "desc")
     .orderBy("created_at", "desc")
     .limit(limit);

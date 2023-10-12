@@ -2,19 +2,29 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 
 import type { PostGetResponse } from "@/types";
 
-const fetchPosts = async ({ pageParam = null }): Promise<PostGetResponse> => {
-  const query = pageParam ? `?cursor=${pageParam}` : "";
+type GetParams = {
+  isDraft: boolean;
+};
 
-  const res = await fetch(`/api/posts${query}`);
+const fetchPosts = async (
+  { pageParam = null },
+  { isDraft }: GetParams
+): Promise<PostGetResponse> => {
+  let query = pageParam ? `&cursor=${pageParam}` : "";
+
+  if (isDraft) {
+    query += `&is_draft=${isDraft}`;
+  }
+  const res = await fetch(`/api/posts?limit=20${query}`);
   const data: PostGetResponse = await res.json();
 
   return data;
 };
 
-export const useInfinitePostsQuery = () => {
+export const useInfinitePostsQuery = ({ isDraft }: GetParams) => {
   return useInfiniteQuery({
     queryKey: ["posts"],
-    queryFn: fetchPosts,
+    queryFn: (params) => fetchPosts(params, { isDraft }),
     getNextPageParam: (lastPage) => lastPage.cursor,
     refetchOnWindowFocus: false,
   });

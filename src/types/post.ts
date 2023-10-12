@@ -10,6 +10,12 @@ export type Post = {
   is_private: boolean;
 } & Resource;
 
+export type PostGetRequest = {
+  cursor?: string;
+  limit?: number;
+  is_draft?: boolean;
+};
+
 export type PostCreateRequest = {
   content: string;
   is_draft: boolean;
