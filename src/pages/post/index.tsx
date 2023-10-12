@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { PostForm, PostsList, PostPageWithDelete } from "@/features";
+import { PostForm, PostsContainer, PostPageWithDelete } from "@/features";
 import { PageLayout } from "@/layouts";
 
 const PostPage: FC = () => {
@@ -13,7 +13,7 @@ const PostPage: FC = () => {
       <div className="w-full">
         <PostForm />
       </div>
-      <PostsList PageComponent={PostPageWithDelete} />
+      <PostsContainer PageComponent={PostPageWithDelete} isEditor={true} />
     </PageLayout>
   );
 };
