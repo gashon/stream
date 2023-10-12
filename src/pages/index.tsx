@@ -15,7 +15,7 @@ export default function FavoritePostsPage() {
       }
       bottomLinkHref="/favorites"
     >
-      <PostsList PageComponent={PostPage} />
+      <PostsList PageComponent={PostPage} isDraft={false} />
     </PageLayout>
   );
 }
