@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useRef, useEffect } from "react";
 import { Formik, Form, Field, FormikHelpers, useFormikContext } from "formik";
 
 import type { PostCreateRequest } from "@/types";
@@ -58,22 +58,30 @@ const PasswordInput: FC = () => (
 );
 
 const ContentInput: FC = () => {
-  const [numRows, setNumRows] = useState(2); // Initialize with default row number
   const { values } = useFormikContext<{ content: string }>();
-
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [numRows, setNumRows] = useState(2);
   useEffect(() => {
-    setNumRows(values.content.split("\n").length || 1); // Calculate row number based on new lines
+    if (textAreaRef.current) {
+      const textAreaWidth = textAreaRef.current.offsetWidth;
+      const textLength = values.content.length;
+      const charWidthApprox = 7; // Approximate width of a character in pixels. Adjust as needed.
+      const charsPerLine = Math.floor(textAreaWidth / charWidthApprox);
+      const newNumRows = Math.ceil(textLength / charsPerLine) || 1;
+      setNumRows(newNumRows);
+    }
   }, [values.content]);
 
   return (
     <div className="flex flex-col">
       <Field
+        innerRef={textAreaRef}
         as="textarea"
         id="content"
         name="content"
         placeholder="Post..."
         className="p-2 border rounded-md text-black resize-none"
-        rows={numRows} // Set dynamic row number
+        rows={numRows}
         style={{ overflowY: "auto" }}
         autoComplete="off"
       />
