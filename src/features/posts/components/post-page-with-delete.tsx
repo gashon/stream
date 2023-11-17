@@ -21,14 +21,14 @@ const PostComponent: FC<PostComponent> = ({onDelete, onPin, post}) => {
   const contentHtml = parseMarkdown(post.content);
 
   return (
-    <div className="my-5  w-full border-b py-2 border-gray-500">
+    <div className="my-5 w-full border-b py-2 border-gray-500">
       <div className="flex justify-between">
         <p className="opacity-50 text-sm">{new Date(post.created_at).toDateString()} </p>
         <div className="flex flex-row gap-2 items-center">
           {post.priority === PostPriority.Pinned && (
             <p className="opacity-25 text-md font-semibold">Pinned</p>
           )}
-          {post.is_private && <p className="opacity-25 text-md underline">(Private)</p>}
+          {post.is_private && <p className="opacity-25 text-md underline">private</p>}
           <div
             className="cursor-pointer opacity-75"
             onClick={() => onPin(post.post_id, post.priority == 0)}

@@ -1,11 +1,11 @@
-import { FC, useState } from "react";
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import {FC, useState} from "react";
+import {AiOutlineStar, AiFillStar} from "react-icons/ai";
 
-import { parseMarkdown } from "@/lib/parser";
-import { PostPriority } from "@/const";
-import type { Post, Favorites, PostGetResponse } from "@/types";
-import { useFavoritePostMutation } from "@/features";
-import { getFavorites } from "@/util/storage";
+import {parseMarkdown} from "@/lib/parser";
+import {PostPriority} from "@/const";
+import type {Post, Favorites, PostGetResponse} from "@/types";
+import {useFavoritePostMutation} from "@/features";
+import {getFavorites} from "@/util/storage";
 
 type Props = {
   posts: PostGetResponse["data"];
@@ -15,8 +15,8 @@ const PostComponent: FC<
   Post & {
     isStarred: boolean;
   }
-> = ({ isStarred: initStarredState, ...post }) => {
-  const { isStarred, favoritePostMutation } = useFavoritePostMutation({
+> = ({isStarred: initStarredState, ...post}) => {
+  const {isStarred, favoritePostMutation} = useFavoritePostMutation({
     isStarred: initStarredState,
     postId: post.post_id,
   });
@@ -36,12 +36,12 @@ const PostComponent: FC<
           {post.priority === PostPriority.Pinned && (
             <p className="opacity-25 text-md font-semibold">Pinned</p>
           )}
-          {post.is_private && <p className="opacity-25 text-md underline">(Private)</p>}
+          {post.is_private && <p className="opacity-25 text-md underline">private</p>}
         </div>
       </div>
       <div className="flex flex-col justify-between mt-1">
         {/* Sanitized by DOMPurify */}
-        <p className="text-md" dangerouslySetInnerHTML={{ __html: contentHtml }}></p>
+        <p className="text-md" dangerouslySetInnerHTML={{__html: contentHtml}}></p>
 
         <div className="flex justify-end mt-1">
           <div className="cursor-pointer opacity-75" onClick={onStarClick}>
@@ -50,7 +50,7 @@ const PostComponent: FC<
                 <AiFillStar className="text-yellow-300" />
                 <AiOutlineStar
                   className="absolute top-0 left-0 text-yellow-300"
-                  style={{ opacity: 0.5 }}
+                  style={{opacity: 0.5}}
                 />
               </div>
             ) : isStarred ? (
@@ -65,7 +65,7 @@ const PostComponent: FC<
   );
 };
 
-export const PostPage: FC<Props> = ({ posts }) => {
+export const PostPage: FC<Props> = ({posts}) => {
   const starredPostIds = getFavorites();
 
   return (
