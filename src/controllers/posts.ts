@@ -40,7 +40,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   // add anon cookie
   let token = getAuthToken(req);
 
-  if (!getAuthToken(req)) {
+  if (token) {
     token = createAnonToken({is_editor: false});
 
     // set cookie
