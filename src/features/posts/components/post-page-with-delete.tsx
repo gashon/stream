@@ -1,11 +1,11 @@
-import { FC } from "react";
-import { BsFillTrash3Fill } from "react-icons/bs";
-import { AiFillPushpin } from "react-icons/ai";
+import {FC} from "react";
+import {BsFillTrash3Fill} from "react-icons/bs";
+import {AiFillPushpin} from "react-icons/ai";
 
-import { parseMarkdown } from "@/lib/parser";
-import { PostPriority } from "@/const";
-import type { Post, PostGetResponse } from "@/types";
-import { useDeletePostMutation, useUpdatePostMutation } from "@/features";
+import {parseMarkdown} from "@/lib/parser";
+import {PostPriority} from "@/const";
+import type {Post, PostGetResponse} from "@/types";
+import {useDeletePostMutation, useUpdatePostMutation} from "@/features";
 
 type PostPageWithDelete = {
   posts: PostGetResponse["data"];
@@ -17,7 +17,7 @@ type PostComponent = {
   onPin: (postId: string, pinIt: boolean) => void;
 };
 
-const PostComponent: FC<PostComponent> = ({ onDelete, onPin, post }) => {
+const PostComponent: FC<PostComponent> = ({onDelete, onPin, post}) => {
   const contentHtml = parseMarkdown(post.content);
 
   return (
@@ -39,7 +39,7 @@ const PostComponent: FC<PostComponent> = ({ onDelete, onPin, post }) => {
       </div>
       <div className="flex flex-col justify-between mt-1">
         {/* Sanitized by DOMPurify */}
-        <p className="text-md" dangerouslySetInnerHTML={{ __html: contentHtml }}></p>
+        <p className="text-md" dangerouslySetInnerHTML={{__html: contentHtml}}></p>
 
         <div className="flex justify-end mt-1">
           <div
@@ -54,16 +54,16 @@ const PostComponent: FC<PostComponent> = ({ onDelete, onPin, post }) => {
   );
 };
 
-export const PostPageWithDelete: FC<PostPageWithDelete> = ({ posts }) => {
+export const PostPageWithDelete: FC<PostPageWithDelete> = ({posts}) => {
   const deletePostMutation = useDeletePostMutation();
   const updatePostMutation = useUpdatePostMutation();
 
   const onDelete = (postId: string) => {
-    deletePostMutation.mutate({ postId });
+    deletePostMutation.mutate({postId});
   };
 
   const onPin = (postId: string, pinIt: boolean) => {
-    updatePostMutation.mutate({ postId, pinIt });
+    updatePostMutation.mutate({postId, pinIt});
   };
 
   return (

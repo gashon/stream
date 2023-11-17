@@ -1,10 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { v4 as uuidv4 } from "uuid";
+import type {NextApiRequest, NextApiResponse} from "next";
+import {v4 as uuidv4} from "uuid";
 
-import { PostPriority } from "@/const";
-import { createAnonToken, setAuthToken, getAuthToken } from "@/utils";
-import { verifyToken } from "@/lib/jwt";
-import { admin } from "@/lib/firebase-admin";
+import {PostPriority} from "@/const";
+import {createAnonToken, setAuthToken, getAuthToken} from "@/utils";
+import {verifyToken} from "@/lib/jwt";
+import {admin} from "@/lib/firebase-admin";
 import type {
   Post,
   PostPatchRequest,
@@ -39,8 +39,9 @@ export const postsHandler = {
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   // add anon cookie
   let token = getAuthToken(req);
+
   if (!getAuthToken(req)) {
-    token = createAnonToken({ is_editor: false });
+    token = createAnonToken({is_editor: false});
 
     // set cookie
     setAuthToken(res, token);
@@ -48,7 +49,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const db = admin.firestore();
   // record analytics in firestore
-  const userId = verifyToken<AuthToken>(getAuthToken(req)!).user_id;
+  const userId = verifyToken<AuthToken>(token).user_id;
   const analyticsDoc = db.collection("analytics").doc("views");
 
   const queryParams = req.query as PostGetRequest;
@@ -111,7 +112,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       {
         [userId]: analytics,
       },
-      { merge: true }
+      {merge: true}
     ),
   ]);
 
@@ -133,7 +134,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   // if no auth, check password in body
   if (!getAuthToken(req)) {
-    const { password } = req.body as PostCreateRequest;
+    const {password} = req.body as PostCreateRequest;
 
     if (password !== process.env.POST_PASSWORD) {
       res.status(401).send({
@@ -143,7 +144,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // create auth token
-    const token = createAnonToken({ is_editor: true });
+    const token = createAnonToken({is_editor: true});
 
     // set cookie
     setAuthToken(res, token);
@@ -162,7 +163,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       // create auth token
-      const token = createAnonToken({ is_editor: true });
+      const token = createAnonToken({is_editor: true});
 
       // set cookie
       setAuthToken(res, token);
@@ -174,7 +175,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const { content, is_draft, is_private } = req.body as PostCreateRequest;
+  const {content, is_draft, is_private} = req.body as PostCreateRequest;
   if ((content ?? "").length == 0) {
     res.status(400).send({
       error: "content is required",
@@ -201,7 +202,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const db = admin.firestore();
   await db.collection("posts").doc(postId).set(post);
 
-  res.status(201).json({ data: post });
+  res.status(201).json({data: post});
 };
 
 const handlePostDeleteRequest = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -245,7 +246,7 @@ const handlePostDeleteRequest = async (req: NextApiRequest, res: NextApiResponse
     deleted_at: new Date().getTime(),
   });
 
-  res.status(200).json({ data: post });
+  res.status(200).json({data: post});
 };
 
 const handlePatchRequest = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -279,7 +280,7 @@ const handlePatchRequest = async (req: NextApiRequest, res: NextApiResponse) => 
 
   const post = postDoc.data() as Post;
 
-  const { content, is_draft, is_private, priority } = req.body as PostPatchRequest;
+  const {content, is_draft, is_private, priority} = req.body as PostPatchRequest;
   if (priority && priority != PostPriority.Pinned && priority != PostPriority.Default) {
     res.status(400).send({
       error: "priority must be 0 or 1",
