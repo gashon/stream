@@ -27,7 +27,9 @@ const AnalyticItem: FC<{ analytic: UserAnalytic }> = ({ analytic }) => {
             <p>Views: {analytic.views}</p>
           </div>
           <p className="opacity-25 text-md font-semibold">IP: {analytic.ip}</p>
-          <p className="opacity-25 text-md underline">User Agent: {analytic.ua}</p>
+          <p className="opacity-25 text-md underline">
+            User Agent: {analytic.ua}
+          </p>
         </div>
 
         <div className="flex justify-end mt-1">
@@ -51,9 +53,14 @@ export const AnalyticsList: FC = () => {
 
   return (
     <div className="w-full p-0">
-      {Object.values(data.data).map((analytic) => (
-        <AnalyticItem key={`analytics:${analytic.user_id}`} analytic={analytic} />
-      ))}
+      {Object.values(data.data)
+        .reverse()
+        .map((analytic) => (
+          <AnalyticItem
+            key={`analytics:${analytic.user_id}`}
+            analytic={analytic}
+          />
+        ))}
     </div>
   );
 };
