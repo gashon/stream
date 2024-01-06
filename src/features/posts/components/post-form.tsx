@@ -20,13 +20,18 @@ enum ErrorStatus {
 }
 
 export const PostForm: FC = () => {
-  const [errorStatus, setErrorStatus] = useState<ErrorStatus>(ErrorStatus.NoError);
+  const [errorStatus, setErrorStatus] = useState<ErrorStatus>(
+    ErrorStatus.NoError,
+  );
   const createPostMutation = useCreatePostMutation();
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={async (values: FormValues, actions: FormikHelpers<FormValues>) => {
+      onSubmit={async (
+        values: FormValues,
+        actions: FormikHelpers<FormValues>,
+      ) => {
         try {
           await createPostMutation.mutateAsync(values);
           actions.resetForm();

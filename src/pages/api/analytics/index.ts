@@ -7,7 +7,7 @@ import { UserAnalytic, AuthToken, AnalyticsGetResponse } from "@/types";
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<AnalyticsGetResponse>
+  res: NextApiResponse<AnalyticsGetResponse>,
 ) {
   switch (req.method) {
     case "GET":
@@ -21,7 +21,7 @@ export default function handler(
 
 const handleGetRequest = async (
   req: NextApiRequest,
-  res: NextApiResponse<AnalyticsGetResponse>
+  res: NextApiResponse<AnalyticsGetResponse>,
 ) => {
   const authToken = verifyToken<AuthToken>(getAuthToken(req)!);
 
