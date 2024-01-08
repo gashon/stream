@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@gashon/analytics':
-    specifier: ^1.7.5
-    version: 1.7.5
+    specifier: ^1.7.8
+    version: 1.7.8
   '@tanstack/react-query':
     specifier: ^4.35.7
     version: 4.35.7(react-dom@18.2.0)(react@18.2.0)
@@ -249,8 +249,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@gashon/analytics@1.7.5:
-    resolution: {integrity: sha512-lWSCFwGHwlZ9KsGm42aYU6N88cFYa8IfoK2nxdEWY8RWld76gmICKJOmnb6oCPbsCw7JjQMMn2r9jhNFUWE+3w==}
+  /@gashon/analytics@1.7.8:
+    resolution: {integrity: sha512-1TBoqYvvlZ9mfFxB3UNmmGMuCWuZXKIPD2XV7eAG4Nt7mDUQeouavd+V4Hu+erbSIH5hhZHFb/o3vMxjHM9paw==}
     dependencies:
       '@fingerprintjs/fingerprintjs': 4.2.1
       '@types/sha1': 1.1.5

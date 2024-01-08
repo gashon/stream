@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@gashon/analytics": "^1.7.5",
+    "@gashon/analytics": "^1.7.8",
     "@tanstack/react-query": "^4.35.7",
     "@types/jsonwebtoken": "^9.0.3",
     "@vercel/analytics": "^1.1.0",
